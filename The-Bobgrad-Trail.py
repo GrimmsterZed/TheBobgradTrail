@@ -18,15 +18,14 @@ medkits = 0
 medkits_cart = 0
 ammo = 0
 ammo_cart = 0
-bill = 0
 
 
 # Define Functions
 def init():
-    '''
+    """
     Initializes important game variables with user input
     :return: None
-    '''
+    """
     global occupation, money, multiplier, wagon_name, partner_name
     print()
     print("Who are you?")
@@ -62,10 +61,10 @@ def init():
 
 def shop():
     # TODO: Debug Shop
-    '''
+    """
     Presents the player with the shop menus
     :return: True when the function is no longer needed
-    '''
+    """
     global money, rations, rations_cart, medkits, medkits_cart, ammo, ammo_cart
     art.tprint("GENERAL STORE", "tarty1")
     print()
@@ -106,7 +105,7 @@ def shop():
         amount = int(amount)
         if amount <= 0:
             return
-        elif (amount) > (money - (rations_cart + medkits_cart + ammo_cart)):
+        elif amount > (money - (rations_cart + medkits_cart + ammo_cart)):
             print("Insufficient Funds!")
             time.sleep(1)
             return
@@ -152,14 +151,17 @@ def shop():
             time.sleep(1)
             return True
         else:
+            rations_cart = 0
+            ammo_cart = 0
+            medkits_cart = 0
             return
 
 
 def menu():
-    '''
+    """
     Shows the main menu for the game
     :return: True if this function does not need to be accessed anymore.
-    '''
+    """
     # Initial Menu
     art.tprint("THE BOBGRAD TRAIL", "tarty1")
     print("By Tommy, Graham, and Eric")
@@ -176,9 +178,9 @@ def menu():
         return True
     elif choice == '2':
         print()
-        print("The Bobgrad trail is a treacherous journey from East to West coast of an unknown region."
+        print("The Bobgrad trail is a treacherous journey from East to West coast of an unknown region. "
               "What lies ahead is dangerous,but offers great reward.\n"
-              "You can only claim your glory at the end of the trail if you can survive the journey there."
+              "You can only claim your glory at the end of the trail if you can survive the journey there. "
               "Do you have what it takes?")
         print()
         input("Press Enter to Return")
@@ -198,6 +200,21 @@ def progressbar(amt, maximum):
     num_spaces = 20 - num_bars
     print("[" + ("#" * int(num_bars)) + (" " * int(num_spaces)) + "]")
 
+
+def supplycheck():
+    """
+    Prints out a list of supplies the player currently has
+    :return: None
+    """
+    print("--------------------------")
+    art.tprint("SUPPLIES", "tarty2")
+    print(f"Money: ${money}.00")
+    print(f"Food: {rations} rations")
+    print(f"Ammo: {ammo} bullets")
+    print(f"Medical Supplies: {medkits} kits")
+    print()
+    input("Press Enter to Return")
+    return
 
 # Import Locals
 from pygame.locals import (
@@ -234,6 +251,7 @@ while not setup_complete:
 print()
 print("Before you leave, you best get fitted with supplies!\n"
       "Everything you'll need is available at the general store.")
+print()
 input("Press Enter to Continue")
 shop_complete = False
 while not shop_complete:
@@ -242,6 +260,7 @@ while not shop_complete:
 print()
 print("The day is young and your crew is ready. \n"
       "You set off on your journey.")
+print()
 input("Press Enter to continue")
 #print(
 #    "@@@@@@@@@@@@@@@@@@@@      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@***   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n         @@@@@@@@@@@@@@      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@                    @@@@@@@@@@@@@@              (@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@                                                              ,@@@@@@@@\n@@@@@@                                                                    (@@@@@\n                                                                          (@@@@@\n                                                                             %@@\n@@@@@@@@@@@%        @@@@@@                                                   %@@\n@@@@@@@@@@@&////////((((((                                                   /((\n@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@                         ,@@@@@@@@                 %@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@                 %@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@              (@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@,                (@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@     .((((((((   (/(@@@@@@@@@@@,        (((     (@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@     ,@@@@@@@@      @@@@@@@@@@@,        @@@     (@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@        ,@@@@@@@@      @@@@@@@@@@@,     @@@@@@     (@@@@@\n@@@@@@@@@@@@@@@@@@@@         @@@@@@@@@@@      @@@@@@@@(        @@@@@@     (@@@@@\n")
