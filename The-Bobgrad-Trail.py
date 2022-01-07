@@ -3,6 +3,36 @@ import numpy as np
 import pygame as pg
 import art
 import time
+import random as ran
+import math
+
+# Initialize Pygame
+pg.init()
+
+# Define Colors
+black = (0, 0, 0)
+white = (255, 255, 255)
+gold = (252, 194, 0)
+red = (255, 0, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+
+# Set up Game Window
+X = 1000
+Y = 1000
+screen = pg.display.set_mode((X, Y))
+screen.fill(black)
+
+# Import Locals
+from pygame.locals import (
+    K_UP,
+    K_DOWN,
+    K_LEFT,
+    K_RIGHT,
+    K_ESCAPE,
+    KEYDOWN,
+    QUIT,
+)
 
 # Initialize Variables
 day = 0
@@ -19,6 +49,11 @@ medkits_cart = 0
 ammo = 0
 ammo_cart = 0
 
+bandit_chance = 0
+pioneer_chance = 0
+hunt_chance = 0
+
+# TODO: Wagon Parts
 
 # Define Functions
 def init():
@@ -216,31 +251,125 @@ def supplycheck():
     input("Press Enter to Return")
     return
 
-# Import Locals
-from pygame.locals import (
-    K_UP,
-    K_DOWN,
-    K_LEFT,
-    K_RIGHT,
-    K_ESCAPE,
-    KEYDOWN,
-    QUIT,
-)
 
-# Define Colors
-black = (0, 0, 0)
-white = (255, 255, 255)
-gold = (252, 194, 0)
-red = (255, 0, 0)
-green = (0, 255, 0)
-blue = (0, 0, 255)
+def mapcheck():
+    """
+    Simulates checking map
+    :return: None
+    """
+    print("--------------------------")
+    art.tprint("MAP", "tarty2")
+    print(f"PROGRESS: {progress}")
+    print("You check your map, but how the hell are we gonna show that in the console?")
+    print()
+    input("Press Enter to Return")
 
-# Initialize Pygame
-pg.init()
 
-# Set up Game Window
-X = 1000
-Y = 1000
+def crewcheck():
+    print("--------------------------")
+    art.tprint("CREW", "tarty2")
+    print(f"PROGRESS: {progress}")
+    print("You check your crew. They aight.")
+    print()
+    input("Press Enter to Return")
+
+
+def usesupplies():
+    """
+    Uses supplies
+    :return: None
+    """
+    print("--------------------------")
+    art.tprint("Supplies", "tarty2")
+    print(f"PROGRESS: {progress}")
+    print("You use supplies. (CODE ME)")
+    print()
+    input("Press Enter to Return")
+
+
+def save():
+    """
+    Saves and exits the game
+    :return: None
+    """
+    print("Saving...")
+    #Do the saving
+    print("Save successful!")
+    input("Press Enter to exit.")
+    exit()
+
+
+def write(str,color, x,y):
+    """
+    :param str: what you want to be written unto the screen
+    :param color: the color of the text in RGB
+    :param x: x coordinate of the text
+    :param y: y coordinate of the text
+    """
+    text = font.render(str, True, color,)
+    screen.blit(text, (x,y))
+
+
+def play(wav_file):
+    """
+    :param wav_file: .wav file you want to play
+    """
+    sound = mixer.Sound(wav_file)
+    sound.play()
+
+
+# Create Sprite Class
+class Sprite:
+    # function that initiates object in class with its parameters
+    def __init__(self, image_file, X, Y):
+        # holds the object's image
+        self.image_file = pg.image.load(image_file)
+        # holds the object's X coordinate
+        self.X = X
+        # holds the object's Y coordinate
+        self.Y = Y
+        # boolean for whether it is showing
+        self.showing = True
+        # boolean for whether it is moving
+        self.moving = True
+
+    # Object method that can be called with an object of this class
+    def show(self):
+        '''
+        shows object on screen
+        '''
+        if self.showing:
+            # takes image, and coordinates then draws it on the screen
+            screen.blit(self.image_file, (self.X, self.Y))
+
+    def moveX(self, speed):
+        """
+        moves object along x axis
+        :param speed: speed at which the object is moving
+        """
+        if self.moving:
+            self.X += speed
+
+    def moveY(self, speed):
+        """
+        moves object along y axis
+        :param speed: speed at which the object is moving
+        """
+        if self.moving:
+            self.Y += speed
+
+    def isTouching(self, other, range):
+        '''
+        see's whether two sprites are touching
+        :param other: another sprite
+        :param range: the distance they are to each other before they are considered touching
+        :return: whether they are touching or not
+        '''
+        # formula for the distance between two vectors
+        distance = math.sqrt((math.pow(self.X - other.X, 2)) + (math.pow(self.Y - other.Y,2)))
+        if distance <= range:
+            return True
+
 
 # Setup
 setup_complete = False
@@ -262,19 +391,15 @@ print("The day is young and your crew is ready. \n"
       "You set off on your journey.")
 print()
 input("Press Enter to continue")
-#print(
-#    "@@@@@@@@@@@@@@@@@@@@      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@***   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n         @@@@@@@@@@@@@@      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@                    @@@@@@@@@@@@@@              (@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@                                                              ,@@@@@@@@\n@@@@@@                                                                    (@@@@@\n                                                                          (@@@@@\n                                                                             %@@\n@@@@@@@@@@@%        @@@@@@                                                   %@@\n@@@@@@@@@@@&////////((((((                                                   /((\n@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@                         ,@@@@@@@@                 %@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@                 %@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@              (@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@,                (@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@     .((((((((   (/(@@@@@@@@@@@,        (((     (@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@@@@     ,@@@@@@@@      @@@@@@@@@@@,        @@@     (@@@@@\n@@@@@@@@@@@@@@@@@@@@@@@        ,@@@@@@@@      @@@@@@@@@@@,     @@@@@@     (@@@@@\n@@@@@@@@@@@@@@@@@@@@         @@@@@@@@@@@      @@@@@@@@(        @@@@@@     (@@@@@\n")
 
-# Run Game
-# TODO: This is mostly a concept, I am not sure how to code this efficiently
-day1_complete = False
+# Day 0
+day0_complete = False
 print("--------------------------")
 art.tprint(f"DAY {day}", "tarty2")
-print("9:00 AM     26°")
-print("Lightly Cloudy")
+print("26°   Lightly Cloudy")
 print(f"PROGRESS: {progress * 100}%")
 progressbar(progress, 1)
-while not day1_complete:
+while not day0_complete:
     print()
     print("You set off on your journey")
     print("You may...")
@@ -285,14 +410,68 @@ while not day1_complete:
     print("5. Use Supplies")
     print("6. Save & Exit")
     choice = input("What is your choice?")
+    while choice not in ['1', '2', '3', '4', '5', '6']:
+        choice = input("What is your choice?")
+    if choice == '1':
+        day0_complete = True
+    elif choice == '2':
+        mapcheck()
+    elif choice == '3':
+        supplycheck()
+    elif choice == '4':
+        crewcheck()
+    elif choice == '5':
+        usesupplies()
+    else:
+        save()
+
+# Run Game
 running = True
 # Main game loop
 while running:
-    exit()
-    # Termination Check
-    for event in pg.event.get():
-        if event.type == pg.QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-            running = False
+    day += 1
+    # add progress
+    # death check
+    if progress == 50:
+        print("50%")
+    elif progress == 100:
+        print("100%")
+    else:
+        print("--------------------------", flush=True)
+        art.tprint(f"DAY {day}", "block")
+        print("26°   Lightly Cloudy")
+        print(f"PROGRESS: {progress * 100}%")
+        progressbar(progress, 1)
+
+        random = ran.randint(0,100)
+        # TODO: Not garbage probability
+        # Bandit
+        if ran.randint(0,100) <= bandit_chance:
+            print("Bandit Pass!")
+            bandit_chance = 0
+            pioneer_chance += 10
+            hunt_chance += 20
+        # Pioneer
+        elif ran.randint(0,100) <= pioneer_chance:
+            print("Pioneer Pass!")
+            pioneer_chance = 0
+            hunt_chance += 20
+            bandit_chance += 5
+        # Hunt
+        elif ran.randint(0,100) <= hunt_chance:
+            print("Hunt Pass!")
+            hunt_chance = 0
+            pioneer_chance += 10
+            bandit_chance += 5
+        else:
+            hunt_chance += 20
+            pioneer_chance += 10
+            bandit_chance += 5
+    input("Press Enter to continue")
+    print('',flush=True)
+
+
+
 
 # Terminate Program
 pg.quit()
